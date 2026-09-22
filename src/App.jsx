@@ -206,7 +206,7 @@ function MobileBlock(){
       </div>
       {/* Image */}
       <div style={{width:"100%",height:220,overflow:"hidden"}}>
-        <img src="/image621.png" alt="Briefkastenanlage" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
+        <img src={import.meta.env.BASE_URL + "image621.png"} alt="Briefkastenanlage" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
       </div>
       {/* Content */}
       <div style={{padding:"28px 24px",flex:1,display:"flex",flexDirection:"column"}}>
