@@ -496,6 +496,6 @@ var isActive=idx<13;if(!isActive)return null;return/*#__PURE__*/React.createElem
        APP ROOT
        ================================================================ */var App=function App(){return/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement(Page1,null),/*#__PURE__*/React.createElement(Page2,null),/*#__PURE__*/React.createElement(Page3,null));};ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App,null));
 </script>
-<script id="pf-ext-js">(function(){["click","auxclick","keydown"].forEach(function(ev){document.addEventListener(ev,function(e){var t=e.target;if(!t||!t.closest)return;var el=t.closest("[data-pf-ext],[data-href][role=link]");if(!el)return;if(ev!=="keydown"||e.key==="Enter"||e.key===" "){e.preventDefault();e.stopImmediatePropagation();}},true);});})();</script>
+<script id="pf-ext-js">(function(){var EXT=/^(https?:|tel:|mailto:)/i,OWN=/^https?:\/\/sabavafa\.github\.io/i;function bad(t){if(!t||!t.closest)return null;var el=t.closest('[data-pf-ext],[data-href][role=link]');if(el)return el;var a=t.closest('a');if(a){var h=a.getAttribute('href')||'';if(EXT.test(h)&&!OWN.test(h))return a;}return null;}['click','auxclick','keydown'].forEach(function(ev){document.addEventListener(ev,function(e){var el=bad(e.target);if(!el)return;if(ev!=='keydown'||e.key==='Enter'||e.key===' '){e.preventDefault();e.stopImmediatePropagation();}},true);});})();</script>
 </body>
 </html>
