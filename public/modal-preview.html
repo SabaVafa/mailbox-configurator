@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Recovery Modal Preview</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,sans-serif;background:#f3f4f6;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:40px 20px;overflow-y:auto;}
+    input,textarea,button{font-family:inherit;}
+    a{color:inherit}
+    .fl{position:relative;}
+    .fl input,.fl textarea{
+      width:100%;padding:20px 12px 6px;
+      border:1px solid #e5e7eb;border-radius:8px;
+      font-size:13px;outline:none;background:#fff;
+      transition:border-color 0.2s;
+    }
+    .fl input:focus,.fl textarea:focus{border-color:#005253;}
+    .fl input::placeholder,.fl textarea::placeholder{opacity:0;}
+    .fl label{
+      position:absolute;left:12px;top:50%;
+      transform:translateY(-50%);
+      font-size:13px;color:#6b7280;
+      pointer-events:none;
+      transition:all 0.2s ease;
+      transform-origin:left center;
+    }
+    .fl textarea~label{top:14px;transform:none;}
+    .fl input:focus~label,
+    .fl input:not(:placeholder-shown)~label,
+    .fl textarea:focus~label,
+    .fl textarea:not(:placeholder-shown)~label{
+      top:6px;transform:translateY(0) scale(0.78);
+      color:#6b7280;
+    }
+    #rm-form{
+      overflow:hidden;
+      max-height:0;
+      opacity:0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      transition:max-height 0.35s ease, opacity 0.3s ease;
+    }
+    #rm-form.open{
+      max-height:500px;
+      opacity:1;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Recovery Modal (open by default for preview) -->
+<div style="background:#fff;border-radius:16px;width:100%;max-width:520px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.14);overflow:hidden;
+            font-family:system-ui,sans-serif;">
+
+  <!-- Header -->
+  <div style="padding:28px 28px 0;display:flex;align-items:flex-start;gap:14px;position:relative;">
+    <div style="width:48px;height:48px;border-radius:50%;background:#e8f5ee;
+                display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+           stroke="#1a6b47" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+        <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z
+                 M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+      </svg>
+    </div>
+    <div style="flex:1;">
+      <div style="font-size:15px;font-weight:700;color:#1a1a1a;line-height:1.3;margin-bottom:8px;">
+        Persönliche Beratung empfohlen
+      </div>
+      <p style="font-size:14px;color:#4b5563;line-height:1.7;">
+        Für die finale Abstimmung empfehlen wir ein kurzes Gespräch mit unseren
+        Fachberatern — wir helfen Ihnen gerne persönlich weiter.
+      </p>
+    </div>
+  </div>
+
+  <!-- Config URL box -->
+  <div style="margin:16px 28px 0;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:12px 14px;">
+    <div style="font-size:11px;font-weight:600;color:#6b7280;
+                text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">
+      Ihre Konfiguration
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:11px;color:#4b5563;flex:1;
+                   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+        https://edelstahl-tuerklingel.de/configurator?color=brushed&units=3&module=VDM10
+      </span>
+      <button id="rm-copy-btn" onclick="copyUrl()"
+              style="flex-shrink:0;padding:6px 12px;background:#005253;color:#fff;
+                     border:none;border-radius:3px;font-size:11px;font-weight:600;
+                     cursor:pointer;white-space:nowrap;transition:background 0.2s;">
+        Link kopieren
+      </button>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div style="padding:20px 28px 28px;display:flex;flex-direction:column;gap:10px;">
+
+    <!-- Call -->
+    <a href="tel:+4971213177333"
+       style="display:flex;align-items:center;gap:14px;
+              border:1.5px solid #e5e7eb;border-radius:10px;
+              padding:14px 16px;text-decoration:none;">
+      <div style="width:36px;height:36px;border-radius:8px;background:#e8f5ee;
+                  display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="#1a6b47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07
+                   19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3
+                   a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11
+                   L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45
+                   12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:#4b5563;">Jetzt anrufen</div>
+        <div style="font-size:14px;color:#4b5563;margin-top:2px;">+49 (0) 7121 / 317 7333 · Mo–Fr 09:00–16:00 Uhr</div>
+      </div>
+    </a>
+
+    <!-- Email -->
+    <a href="mailto:service@metzlergmbh.de"
+       style="display:flex;align-items:center;gap:14px;
+              border:1.5px solid #e5e7eb;border-radius:10px;
+              padding:14px 16px;text-decoration:none;">
+      <div style="width:36px;height:36px;border-radius:8px;background:#e8f5ee;
+                  display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="#1a6b47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:#4b5563;">E-Mail schreiben</div>
+        <div style="font-size:14px;color:#4b5563;margin-top:2px;">service@metzlergmbh.de</div>
+      </div>
+    </a>
+
+    <!-- Form toggle -->
+    <button id="form-toggle-btn" onclick="toggleForm()" aria-expanded="false" aria-controls="rm-form"
+            style="display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+                   border:1.5px solid #e5e7eb;border-radius:10px;
+                   padding:14px 16px;background:#fff;cursor:pointer;">
+      <div style="width:36px;height:36px;border-radius:8px;background:#e8f5ee;
+                  display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="#1a6b47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:#4b5563;">Nachricht senden</div>
+        <div style="font-size:14px;color:#4b5563;margin-top:2px;">Problem beschreiben oder Rückruf anfragen</div>
+      </div>
+    </button>
+
+    <!-- Inline form -->
+    <div id="rm-form">
+      <div class="fl">
+        <input type="text" placeholder=" "/>
+        <label>Name</label>
+      </div>
+      <div class="fl">
+        <input type="email" placeholder=" "/>
+        <label>E-Mail-Adresse</label>
+      </div>
+      <div class="fl">
+        <input type="tel" placeholder=" "/>
+        <label>Telefonnummer (optional)</label>
+      </div>
+      <div class="fl">
+        <textarea rows="3" placeholder=" " style="resize:vertical;"></textarea>
+        <label>Nachricht (optional)</label>
+      </div>
+      <div>
+        <label for="rm-config-url" style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:5px;">Ihre Konfiguration</label>
+        <input type="text" id="rm-config-url" readonly aria-label="Konfigurationslink (automatisch ausgefüllt)"
+               value="https://edelstahl-tuerklingel.de/configurator?color=brushed&units=3&module=VDM10"
+               style="width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;
+                      font-size:11px;color:#6b7280;background:#f3f4f6;cursor:default;
+                      box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"/>
+      </div>
+      <button onclick="handleSubmit(this)"
+              style="padding:11px;background:#005253;color:#fff;border:none;
+                     border-radius:3px;font-size:14px;font-weight:600;cursor:pointer;">
+        Nachricht absenden
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function copyText(text){
+    if(navigator.clipboard&&navigator.clipboard.writeText)
+      return navigator.clipboard.writeText(text);
+    const ta=document.createElement('textarea');
+    ta.value=text;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    return Promise.resolve();
+  }
+
+  const _formHTML=document.getElementById('rm-form').innerHTML;
+
+  function collapseForm(){
+    const f=document.getElementById('rm-form');
+    const btn=document.getElementById('form-toggle-btn');
+    f.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    setTimeout(()=>{
+      f.innerHTML=_formHTML;
+      delete f.dataset.submitted;
+    },350);
+  }
+
+  function toggleForm(){
+    const f=document.getElementById('rm-form');
+    const btn=document.getElementById('form-toggle-btn');
+    if(f.dataset.submitted){ collapseForm(); return; }
+    const open=f.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open?'true':'false');
+  }
+
+  function copyUrl(){
+    const url='https://edelstahl-tuerklingel.de/configurator?color=brushed&units=3&module=VDM10';
+    copyText(url).then(()=>{
+      const btn=document.getElementById('rm-copy-btn');
+      btn.textContent='✓ Kopiert';
+      btn.style.background='#009951';
+      setTimeout(()=>{btn.textContent='Link kopieren';btn.style.background='#005253';},2000);
+    });
+  }
+
+  function handleSubmit(btn){
+    const form=document.getElementById('rm-form');
+    form.dataset.submitted='true';
+    form.innerHTML='<p style="text-align:center;color:#009951;font-weight:600;padding:14px 0;font-size:14px;">✓ Nachricht gesendet. Wir melden uns bald!</p>';
+    setTimeout(()=>{
+      document.addEventListener('click', function dismiss(e){
+        if(!form.contains(e.target)){
+          document.removeEventListener('click', dismiss);
+          collapseForm();
+        }
+      });
+    }, 0);
+  }
+</script>
+</body>
+</html>

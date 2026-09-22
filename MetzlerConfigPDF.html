@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metzler BK-Series – Konfigurationsübersicht</title>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'mg':        '#005A42',
+            'mg-mid':    '#006B4F',
+            'mg-pale':   '#E6F2EE',
+            'cc':        '#1C1C1E',
+            'cc-mid':    '#3C3C3E',
+            'cc-light':  '#6C6C70',
+            'cc-faint':  '#AEAEB2',
+          },
+          fontFamily: {
+            inter: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      box-sizing: border-box;
+    }
+    html, body {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      background: #D1D5DB;
+      margin: 0;
+      padding: 0;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      margin: 24px auto;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.14);
+    }
+    @media print {
+      html, body { background: white; }
+      .no-print { display: none !important; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+      @page { size: A4; margin: 0; }
+    }
+    .price-num { font-variant-numeric: tabular-nums; }
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #005A42;
+    }
+    .section-tag::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 14px;
+      background: #005A42;
+      border-radius: 2px;
+    }
+    tr.price-row td { border-top: 1px solid #F0F0F0; }
+    tr.price-row:first-child td { border-top: none; }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    /* ================================================================
+       DATA  ─  sourced directly from both Metzler Zusammenfassung PDFs
+       ================================================================ */
+    const CONFIG = {
+      id:           'MBK-2026-0317-A7F3',
+      configUrl:    'http://www.example.com/config?code=MBK-2026-0317-A7F3',
+      date:         '17.03.2026',
+      validUntil:   '15.06.2026',
+      series:       'BK-Series',
+      model:        'BK212',
+
+      /* ── Mounting & Housing ── */
+      mounting: {
+        type:         'Freistehend mit Standfuß zum Einbetonieren',
+        typeShort:    'Freistehend / Einbetonieren',
+        mailboxCount: 13,
+        rows:         3,
+        columns:      5,
+        roofElement:  'Dachelement für BK212 × 5',
+        handleColor:  'Anthrazit',
+        nameplate:    'Einsteckschild mit Papiereinleger',
+        nameplateFont:'Schriftart 7',
+        dimensions:   { w: 1170, h: 1170, d: 116 },
+      },
+
+      /* ── Intercom & Access ── */
+      intercom: {
+        module:         'VDM10 S',
+        connectivity:   'LAN / PoE',
+        access:         'Touch-Display + RFID + PIN',
+        bellSystem:     'Klingeltaster-System · 1 Einheit',
+        openingButton:  'Beleuchteter Öffnungstaster',
+        sipIntegration: 'SIP & FRITZ! Integration',
+        appControl:     'Smartphone App',
+        wirelessIndoor: 'Innenstationen kabellos verbinden',
+        hasFingerprint: false,
+      },
+
+
+      /* ── Special Flags ── */
+      is15BoxConfig: false,   // ← set true to show 15-box spatial constraint notice
+    };
+
+    /* ── Line items (article numbers & prices from both PDFs) ── */
+    const BASE_ITEMS = [
+      /* Mounting */
+      { cat:'mounting', name:'Dachelement für BK212 × 5',                          artNr:'40107', unit: 69.00, qty:  1 },
+      { cat:'mounting', name:'Freistehend mit Standfuß zum Einbetonieren',          artNr:'37862', unit:200.00, qty:  1 },
+      { cat:'mounting', name:'Briefkasten BK212 mit austauschbarem Namensschild',   artNr:'41411', unit:119.00, qty: 13 },
+      { cat:'mounting', name:'Namensschild mit Papiereinleger',                     artNr:'40099', unit: 10.00, qty: 26 },
+      /* Intercom */
+      { cat:'intercom', name:'BK212 Videogegensprechmodul',                         artNr:'40097', unit:999.00, qty:  1 },
+      { cat:'intercom', name:'Metzler – Drucktaster 19 mm – LED-Ring',              artNr:'5010',  unit:  8.49, qty: 13 },
+    ];
+
+    /* VDM10 fingerprint rule: if fingerprint active, Klingeltaster-System is mandatory */
+    if (CONFIG.intercom.hasFingerprint) {
+      BASE_ITEMS.splice(5, 0, {
+        cat:'intercom',
+        name:'Klingeltaster-System (Pflichtkomponente – Fingerprint aktiv)',
+        artNr:'40096',
+        unit:474.81,
+        qty:1,
+        mandatory: true,
+      });
+    }
+
+    const LINE_ITEMS = BASE_ITEMS.map(i => ({ ...i, total: +(i.unit * i.qty).toFixed(2) }));
+    const GRAND_TOTAL = +LINE_ITEMS.reduce((s,i) => s + i.total, 0).toFixed(2);
+    const NET         = +(GRAND_TOTAL / 1.19).toFixed(2);
+    const VAT         = +(GRAND_TOTAL - NET).toFixed(2);
+
+    /* ── Helpers ── */
+    const fmt = v => v.toLocaleString('de-DE', { minimumFractionDigits:2, maximumFractionDigits:2 });
+    const groupBy = (arr, key) => arr.reduce((acc, item) => {
+      (acc[item[key]] = acc[item[key]] || []).push(item);
+      return acc;
+    }, {});
+
+    /* ================================================================
+       SUB-COMPONENTS
+       ================================================================ */
+
+    /* ── Metzler Logo ── */
+    const Logo = ({ scale = 1 }) => (
+      <svg width={Math.round(492.88 * scale * 0.42)} height={Math.round(82.76 * scale * 0.42)} viewBox="0 0 492.88 82.76" xmlns="http://www.w3.org/2000/svg">
+        <defs><style>{`.cls-1{fill:#fff;}.cls-2{fill:#1b181c;}.cls-3{fill:#d32b25;}`}</style></defs>
+        <rect className="cls-1" x="6.06" y="3.74" width="67.91" height="71.83"/>
+        <g id="Wort_Bildmarke_Classic">
+          <path className="cls-3" d="M80.18,0H2.58C1.16,0,0,1.16,0,2.58V80.18c0,1.42,1.16,2.58,2.58,2.58H80.18c1.42,0,2.58-1.16,2.58-2.58V2.58c0-1.42-1.16-2.58-2.58-2.58ZM31.52,15.63l8.55,14.81-4.3,7.44L22.93,15.63h8.59Zm.04,33.13h0l-10.53-18.25v38.57h-7.44V15.63h7.44l14.83,25.69L55.65,7.03h8.59l-28.39,49.18-4.3-7.44Zm37.21,20.32h-7.44V30.52l-14.82,25.66h-8.59L61.32,15.64h7.44v53.45Z"/>
+          <g>
+            <path className="cls-2" d="M152.02,69.08l-.15-28.33-13.74,23.06h-6.72l-13.67-22.3v27.57h-13.97V15.63h12.45l18.78,30.85,18.33-30.85h12.45l.15,53.45h-13.9Z"/>
+            <path className="cls-2" d="M222.88,57.4v11.68h-42.91V15.63h41.92v11.68h-26.95v9.01h23.75v11.3h-23.75v9.77h27.95Z"/>
+            <path className="cls-2" d="M246.78,27.62h-16.42V15.63h47.88v11.99h-16.34v41.46h-15.12V27.62Z"/>
+            <path className="cls-2" d="M332.08,57.1v11.99h-47.88v-9.47l26.95-31.99h-26.27V15.63h46.04v9.47l-26.95,31.99h28.1Z"/>
+            <path className="cls-2" d="M343.6,15.63h15.12V57.1h25.5v11.99h-40.62V15.63Z"/>
+            <path className="cls-2" d="M433.4,57.4v11.68h-42.91V15.63h41.92v11.68h-26.95v9.01h23.75v11.3h-23.75v9.77h27.95Z"/>
+            <path className="cls-2" d="M467,54.88h-8.25v14.2h-15.12V15.63h24.43c4.84,0,9.04,.8,12.6,2.4,3.56,1.6,6.31,3.89,8.25,6.87,1.93,2.98,2.9,6.48,2.9,10.5s-.9,7.24-2.71,10.12c-1.81,2.88-4.39,5.13-7.75,6.76l11.53,16.8h-16.19l-9.7-14.2Zm7.18-25.27c-1.58-1.37-3.92-2.06-7.03-2.06h-8.4v15.65h8.4c3.1,0,5.45-.67,7.03-2.02,1.58-1.35,2.37-3.27,2.37-5.76s-.79-4.43-2.37-5.8Z"/>
+          </g>
+        </g>
+      </svg>
+    );
+
+    /* ── Page accent bar ── */
+    const AccentBar = () => (
+      <div style={{ height:5, background:'linear-gradient(90deg, #005A42 0%, #007A5A 60%, #009966 100%)' }} />
+    );
+
+    /* ── Barcode component ── */
+    
+    const Barcode = ({ height = 32, maxWidth = 120 }) => (
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:3, width:maxWidth }}>
+        <img src="/img_barcode.png" style={{ display:'block', width:'100%', height:height, objectFit:'fill' }} />
+        <span style={{ fontSize:9, fontFamily:'monospace', color:'#5C5C60', letterSpacing:'0.08em', textAlign:'right' }}>
+          {CONFIG.id}
+        </span>
+      </div>
+    );
+
+    /* ── QR Code component ── */
+    
+    const QRCodeWidget = ({ size = 64 }) => (
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:3 }}>
+        <img src="/img_qr.png" width={size} height={size} style={{ display:'block', imageRendering:'pixelated' }} />
+        <span style={{ fontSize:8, color:'#6C6C70', fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase' }}>Konfigurator</span>
+      </div>
+    );
+
+    /* ── Page header ── */
+    const Header = ({ configId, date }) => (
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'16px 48px 14px' }}>
+        <Logo scale={0.9} />
+        <div style={{ display:'flex', alignItems:'center', gap:16 }}>
+          <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:4 }}>
+            <div style={{ fontSize:9, fontWeight:700, letterSpacing:'0.16em', textTransform:'uppercase', color:'#6C6C70' }}>Konfigurationsnummer</div>
+            <Barcode height={32} />
+            <div style={{ fontSize:9, color:'#6C6C70' }}>Erstellt am {date} · Gültig bis {CONFIG.validUntil}</div>
+          </div>
+        </div>
+      </div>
+    );
+
+    /* ── Page footer ── */
+    const Footer = ({ page, total }) => (
+      <div style={{
+        position:'absolute', bottom:0, left:0, right:0,
+        borderTop:'2px solid #BBBBBB',
+        padding:'10px 48px',
+        display:'flex', justifyContent:'space-between', alignItems:'center',
+        background:'white',
+      }}>
+        <div style={{ display:'flex', gap:24 }}>
+          {[
+            [<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3C3C3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6.06 6.06l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>, '07121 / 317 73 10'],
+            [<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3C3C3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>, 'service@metzlergmbh.de'],
+            [<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3C3C3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>, 'edelstahl-tuerklingel.de'],
+          ].map(([icon, text]) => (
+            <span key={text} style={{ display:'flex', alignItems:'center', gap:4, fontSize:9, color:'#3C3C3E' }}>{icon}{text}</span>
+          ))}
+        </div>
+        <div style={{ display:'flex', alignItems:'center', gap:24 }}>
+          <span style={{ fontSize:9, color:'#5C5C60' }}>Metzler GmbH · Täleswiesenstr. 9 · 72770 Reutlingen</span>
+          <span style={{ fontSize:10, fontWeight:700, color:'#1C1C1E' }}>{page} / {total}</span>
+        </div>
+      </div>
+    );
+
+    /* ── Divider ── */
+    const Divider = ({ mx = 48, my = 0 }) => (
+      <div style={{ height:1, background:'#EBEBEB', margin:`${my}px ${mx}px` }} />
+    );
+
+    /* ── Section label ── */
+    const SectionLabel = ({ children }) => (
+      <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:14 }}>
+        <div style={{ width:3, height:16, background:'#005A42', borderRadius:2 }} />
+        <span style={{ fontSize:12, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#005A42' }}>{children}</span>
+      </div>
+    );
+
+    /* ── Spec row ── horizontal: fixed-% columns so text wraps cleanly */
+    const SpecRow = ({ label, value, accent }) => (
+      <div style={{
+        display:'flex', flexDirection:'row', alignItems:'flex-start', gap:6,
+        padding:'5px 0',
+        borderBottom:'1px solid #E4E4E4',
+        borderLeft: accent ? '3px solid #005A42' : '3px solid transparent',
+        paddingLeft: accent ? 8 : 0,
+        marginLeft: accent ? -3 : 0,
+        background: accent ? '#F4FAF7' : 'transparent',
+        borderRadius: accent ? '0 4px 4px 0' : 0,
+      }}>
+        <span style={{ flex:'0 0 40%', fontSize:9, color:'#6C6C70', fontWeight:700, lineHeight:1.5, textTransform:'uppercase', letterSpacing:'0.06em', paddingTop:1 }}>{label}</span>
+        <span style={{ flex:'1 1 60%', fontSize:11, color: accent ? '#005A42' : '#1C1C1E', fontWeight:700, lineHeight:1.5, wordBreak:'break-word' }}>{value}</span>
+      </div>
+    );
+
+    /* ── Mailbox SVG render (BK212 Anthrazit, Freestanding) ── */
+    const MailboxSVG = () => (
+      <svg viewBox="0 0 620 400" xmlns="http://www.w3.org/2000/svg" style={{ width:'100%', height:'auto', maxHeight:'360px' }}>
+        <defs>
+          <linearGradient id="housing" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#42464D"/>
+            <stop offset="100%" stopColor="#2D3035"/>
+          </linearGradient>
+          <linearGradient id="intercom" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#252830"/>
+            <stop offset="100%" stopColor="#1E2025"/>
+          </linearGradient>
+          <linearGradient id="roof" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#3A3E45"/>
+            <stop offset="100%" stopColor="#2A2D32"/>
+          </linearGradient>
+          <linearGradient id="legGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#252830"/>
+            <stop offset="100%" stopColor="#333840"/>
+          </linearGradient>
+          <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="#000" floodOpacity="0.18"/>
+          </filter>
+          <filter id="softShadow" x="-5%" y="-5%" width="110%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.10"/>
+          </filter>
+        </defs>
+
+        {/* ── Stand legs ── */}
+        <rect x="148" y="272" width="26" height="110" rx="4" fill="url(#legGrad)" />
+        <rect x="446" y="272" width="26" height="110" rx="4" fill="url(#legGrad)" />
+        {/* Feet plates */}
+        <rect x="132" y="376" width="58" height="8" rx="3" fill="#1E2025"/>
+        <rect x="430" y="376" width="58" height="8" rx="3" fill="#1E2025"/>
+
+        {/* ── Main housing ── */}
+        <rect x="110" y="46" width="400" height="230" rx="4" fill="url(#housing)" filter="url(#shadow)"/>
+
+        {/* ── Roof element ── */}
+        <rect x="106" y="36" width="408" height="16" rx="3" fill="url(#roof)"/>
+        <rect x="106" y="46" width="408" height="6" rx="0" fill="#35383F" opacity="0.5"/>
+
+        {/* ── Intercom panel (left, full height) ── */}
+        <rect x="113" y="49" width="88" height="224" rx="3" fill="url(#intercom)" filter="url(#softShadow)"/>
+
+        {/* Screen / display */}
+        <rect x="120" y="58" width="74" height="54" rx="3" fill="#0D1117"/>
+        <rect x="122" y="60" width="70" height="50" rx="2" fill="#0A0E14"/>
+        {/* Camera */}
+        <circle cx="157" cy="125" r="7" fill="#1A1A28"/>
+        <circle cx="157" cy="125" r="4.5" fill="#005A42"/>
+        <circle cx="157" cy="125" r="2.5" fill="#007A5A"/>
+        <circle cx="159" cy="123" r="0.8" fill="rgba(255,255,255,0.4)"/>
+        {/* Mic dot */}
+        <circle cx="177" cy="125" r="2" fill="#444"/>
+        {/* Speaker grille */}
+        {[138, 144, 150, 156, 162].map(y => (
+          <line key={y} x1="122" y1={y} x2="192" y2={y} stroke="#555" strokeWidth="1.2" strokeLinecap="round"/>
+        ))}
+        {/* Bell buttons × 13 */}
+        {Array.from({length:13}).map((_,i) => {
+          const col = i % 2;
+          const row = Math.floor(i / 2);
+          const x = col === 0 ? 133 : 163;
+          const y = 176 + row * 17;
+          return (
+            <g key={i}>
+              <rect x={x-8} y={y-6} width="18" height="12" rx="2" fill="#333840"/>
+              <circle cx={x+1} cy={y} r="3.5" fill="#555"/>
+              <circle cx={x+1} cy={y} r="1.8" fill="#777"/>
+            </g>
+          );
+        })}
+        {/* Intercom brand label */}
+        <rect x="120" y="258" width="74" height="10" rx="2" fill="#1A1D24"/>
+        <text x="157" y="266" textAnchor="middle" fill="#005A42" fontSize="6" fontFamily="Inter, sans-serif" fontWeight="600" letterSpacing="1">VDM10</text>
+
+        {/* ── Mailbox cells: 3 rows × 4 cols = 12, plus 1 blind ── */}
+        {Array.from({length:15}).map((_,idx) => {
+          const col = idx % 4;
+          const row = Math.floor(idx / 4);
+          const x = 207 + col * 77;
+          const y = 52 + row * 74;
+          const isBlind = idx === 12; // slot 13 = blind module
+          const isActive = idx < 13;
+          if (!isActive) return null;
+
+          return (
+            <g key={idx} filter="url(#softShadow)">
+              <rect x={x} y={y} width="73" height="70" rx="3"
+                fill={isBlind ? '#252830' : '#383C43'}
+                stroke={isBlind ? '#1E2025' : '#2D3035'}
+                strokeWidth="1"/>
+
+              {!isBlind && (
+                <>
+                  {/* Keyhole */}
+                  <circle cx={x+14} cy={y+35} r="4.5" fill="#252830" stroke="#1E2025" strokeWidth="0.5"/>
+                  <rect x={x+12} y={y+39} width="4" height="6" rx="1" fill="#252830"/>
+
+                  {/* Name label recess */}
+                  <rect x={x+24} y={y+22} width="40" height="26" rx="2" fill="#2D3035" opacity="0.8"/>
+                  {/* Label lines */}
+                  <rect x={x+27} y={y+29} width="34" height="2" rx="1" fill="#4A4F58" opacity="0.7"/>
+                  <rect x={x+27} y={y+35} width="26" height="2" rx="1" fill="#4A4F58" opacity="0.5"/>
+
+                  {/* Horizontal slot */}
+                  <rect x={x+4} y={y+8} width="65" height="4" rx="1" fill="#252830" opacity="0.5"/>
+                </>
+              )}
+              {isBlind && (
+                <text x={x+36} y={y+38} textAnchor="middle" fill="#333" fontSize="7" fontFamily="Inter, sans-serif">blind</text>
+              )}
+            </g>
+          );
+        })}
+
+        {/* ── Dimension annotations ── */}
+        {/* Width arrow */}
+        <line x1="110" y1="22" x2="518" y2="22" stroke="#005A42" strokeWidth="0.8" strokeDasharray="3,2"/>
+        <line x1="110" y1="17" x2="110" y2="27" stroke="#005A42" strokeWidth="1.5"/>
+        <line x1="518" y1="17" x2="518" y2="27" stroke="#005A42" strokeWidth="1.5"/>
+        <text x="314" y="17" textAnchor="middle" fill="#005A42" fontSize="9.5" fontFamily="Inter, sans-serif" fontWeight="600">1170 mm</text>
+
+        {/* Height arrow */}
+        <line x1="92" y1="46" x2="92" y2="276" stroke="#005A42" strokeWidth="0.8" strokeDasharray="3,2"/>
+        <line x1="87" y1="46" x2="97" y2="46" stroke="#005A42" strokeWidth="1.5"/>
+        <line x1="87" y1="276" x2="97" y2="276" stroke="#005A42" strokeWidth="1.5"/>
+        <text x="86" y="166" textAnchor="middle" fill="#005A42" fontSize="9.5" fontFamily="Inter, sans-serif" fontWeight="600" transform="rotate(-90, 86, 166)">1170 mm</text>
+
+        {/* Depth label */}
+        <text x="314" y="395" textAnchor="middle" fill="#9C9C9C" fontSize="9" fontFamily="Inter, sans-serif">Tiefe: 116 mm · Farbe: Anthrazit (RAL 7016)</text>
+      </svg>
+    );
+
+    /* ── Spec section ── full-width horizontal strip: title left, fields right ── */
+    const SpecSection = ({ title, rows }) => (
+      <div style={{ display:'flex', borderBottom:'1px solid #E0E0E0' }}>
+        {/* Category label */}
+        <div style={{
+          flex:'0 0 110px', padding:'12px 14px',
+          background:'#005A42',
+          display:'flex', alignItems:'center',
+        }}>
+          <span style={{ fontSize:9, fontWeight:800, letterSpacing:'0.09em', textTransform:'uppercase', color:'white', lineHeight:1.45 }}>{title}</span>
+        </div>
+        {/* Spec cells — equal-width columns */}
+        <div style={{ flex:1, display:'grid', gridTemplateColumns:`repeat(${rows.length}, 1fr)`, minWidth:0 }}>
+          {rows.map(([label, value, accent], i) => (
+            <div key={i} style={{
+              padding:'9px 12px',
+              borderRight: i < rows.length - 1 ? '1px solid #EBEBEB' : 'none',
+              borderLeft: accent ? '3px solid #005A42' : 'none',
+              background: accent ? '#EEF7F3' : 'transparent',
+              minWidth: 0,
+            }}>
+              <div style={{ fontSize:7.5, color:'#6C6C70', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.07em', marginBottom:2, lineHeight:1.3, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{label}</div>
+              <div style={{ fontSize:10.5, color: accent ? '#005A42' : '#1C1C1E', fontWeight:700, lineHeight:1.35, overflowWrap:'break-word' }}>{value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    /* ── Spec card (used in 3-col grid) ── */
+    const SpecCard = ({ title, rows, notice, noticeType='warn' }) => {
+      const noticeColors = {
+        warn:  { bg:'white', border:'#B45309', text:'#7C3A00' },
+        info:  { bg:'white', border:'#005A42', text:'#003D2C' },
+        alert: { bg:'white', border:'#991B1B', text:'#6B0000' },
+      };
+      const nc = noticeColors[noticeType];
+      return (
+        <div style={{
+          background:'white',
+          border:'1.5px solid #CCCCCC',
+          borderTop:'3px solid #005A42',
+          borderRadius:8, padding:'16px 18px',
+        }}>
+          <SectionLabel>{title}</SectionLabel>
+          {rows.map(([label, value, accent], i) => (
+            <SpecRow key={i} label={label} value={value} accent={accent} />
+          ))}
+          {notice && (
+            <div style={{
+              marginTop:12, padding:'8px 10px',
+              background: 'white',
+              border:`1.5px solid ${nc.border}`,
+              borderLeft:`4px solid ${nc.border}`,
+              borderRadius:4, fontSize:12, color: nc.text, lineHeight:1.7,
+            }}>
+              {notice}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    /* ── Pricing table row group ── */
+    const PriceSection = ({ title, items }) => (
+      <>
+        <tr>
+          <td colSpan={4} style={{ paddingTop:20, paddingBottom:10 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+              <div style={{ width:3, height:14, background:'#005A42', borderRadius:2 }}/>
+              <span style={{ fontSize:12, fontWeight:700, letterSpacing:'0.10em', textTransform:'uppercase', color:'#005A42' }}>{title}</span>
+            </div>
+          </td>
+        </tr>
+        {items.map((item, i) => (
+          <tr key={i} style={{ borderTop:'1px solid #CCCCCC' }}>
+            <td style={{ padding:'10px 16px 10px 0', verticalAlign:'top' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:12, fontWeight:600, color:'#1C1C1E', lineHeight:1.45 }}>
+                  {item.name}
+                </span>
+                {item.mandatory && (
+                  <span style={{
+                    padding:'2px 7px', borderRadius:4, fontSize:12, fontWeight:700,
+                    background:'white', border:'1.5px solid #B45309', color:'#7C3A00',
+                    whiteSpace:'nowrap',
+                  }}>
+                    ⚠ Pflicht
+                  </span>
+                )}
+              </div>
+              <div style={{ fontSize:12, color:'#5C5C60', marginTop:2, fontFamily:'monospace', letterSpacing:'0.04em' }}>
+                Art.-Nr. {item.artNr}
+              </div>
+            </td>
+            <td style={{ padding:'10px 20px', textAlign:'right', verticalAlign:'middle', width:110 }}>
+              <span style={{ fontSize:12, color:'#4A4A4A', fontVariantNumeric:'tabular-nums' }}>
+                {fmt(item.unit)} €
+              </span>
+            </td>
+            <td style={{ padding:'10px 20px', textAlign:'right', verticalAlign:'middle', width:60 }}>
+              <span style={{
+                fontSize:12, fontWeight:700, color:'#1C1C1E',
+              }}>{item.qty}</span>
+            </td>
+            <td style={{ padding:'10px 0 10px 20px', textAlign:'right', verticalAlign:'middle', width:110 }}>
+              <span style={{ fontSize:13, fontWeight:800, color:'#1C1C1E', fontVariantNumeric:'tabular-nums' }}>
+                {fmt(item.total)} €
+              </span>
+            </td>
+          </tr>
+        ))}
+      </>
+    );
+
+    /* ================================================================
+       PAGE 1  ─  Dedicated Product Image Page
+       ================================================================ */
+    const Page1 = () => (
+      <div className="page" style={{ paddingBottom:68, display:'flex', flexDirection:'column' }}>
+        <AccentBar />
+        <Header configId={CONFIG.id} date={CONFIG.date} />
+        <Divider my={0} />
+
+        {/* ── Title ── */}
+        <div style={{ padding:'14px 48px 10px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+          <div>
+            <div style={{ fontSize:12, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#005A42', marginBottom:4 }}>
+              Produktkonfiguration
+            </div>
+            <h1 style={{ fontSize:26, fontWeight:800, color:'#1C1C1E', margin:0, lineHeight:1.15 }}>
+              Metzler {CONFIG.series} — Briefkastenanlage
+            </h1>
+            <p style={{ fontSize:13, color:'#3C3C3E', margin:'4px 0 0', fontWeight:500 }}>
+              Modell {CONFIG.model} · {CONFIG.mounting.mailboxCount} Einheiten · {CONFIG.mounting.typeShort}
+            </p>
+          </div>
+          <QRCodeWidget url={CONFIG.configUrl} size={72} />
+        </div>
+
+        {/* ── Full-page product image ── */}
+        <div style={{
+          margin:'0 48px',
+          flex:1,
+          display:'flex', flexDirection:'column',
+        }}>
+          {/* Info bar */}
+          <div style={{
+            display:'flex', justifyContent:'space-between', alignItems:'center',
+            padding:'10px 0',
+            borderBottom:'1.5px solid #CCCCCC',
+            background:'white',
+            flexShrink:0,
+          }}>
+            <span style={{ fontSize:12, fontWeight:600, color:'#1C1C1E', letterSpacing:'0.04em' }}>
+              {CONFIG.mounting.dimensions.w} × {CONFIG.mounting.dimensions.h} × {CONFIG.mounting.dimensions.d} mm (W×H×D)
+            </span>
+          </div>
+
+          {/* Product image — fills all remaining space */}
+          <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center' }}>
+            
+            <img src="/img_product.png" style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'contain' }} />
+          </div>
+        </div>
+
+        <Footer page={1} total={3} />
+      </div>
+    );
+
+    /* ================================================================
+       PAGE 2  ─  Configuration Details (Spec Grid)
+       ================================================================ */
+    const Page2 = () => {
+      const mounting15Notice = CONFIG.is15BoxConfig
+        ? '⚠ Bei 15 Briefkästen: Aufgrund räumlicher Beschränkungen ist kein zusätzliches Türmodul integrierbar.'
+        : null;
+
+
+      return (
+        <div className="page" style={{ paddingBottom:68 }}>
+          <AccentBar />
+          <Header configId={CONFIG.id} date={CONFIG.date} />
+          <Divider my={0} />
+
+          <div style={{ padding:'18px 48px 0', marginBottom:16 }}>
+            <div style={{ fontSize:12, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#005A42', marginBottom:5 }}>
+              Modul-Übersicht
+            </div>
+            <h2 style={{ fontSize:22, fontWeight:800, color:'#1C1C1E', margin:0 }}>Technische Spezifikation</h2>
+          </div>
+
+          {/* ── Spec table: clean 2-column label / value ── */}
+          <div style={{ padding:'0 48px', marginBottom:16 }}>
+            <div style={{
+              border:'1.5px solid #D4D4D4',
+              borderTop:'3px solid #005A42',
+              borderRadius:8,
+              overflow:'hidden',
+            }}>
+              {/* Header */}
+              <div style={{
+                padding:'11px 20px',
+                borderBottom:'1.5px solid #D4D4D4',
+                display:'flex', alignItems:'center', gap:8,
+                background:'#FAFAFA',
+              }}>
+                <div style={{ width:3, height:14, background:'#005A42', borderRadius:2, flexShrink:0 }} />
+                <span style={{ fontSize:11, fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase', color:'#005A42' }}>Türstationsmodul</span>
+              </div>
+
+              {/* Rows */}
+              {[
+                ['Modul',            CONFIG.intercom.module,         false],
+                ['Anschluss',        CONFIG.intercom.connectivity,   false],
+                ['Zugangsmodul',     CONFIG.intercom.access,         true ],
+                ['Klingeltaster',    CONFIG.intercom.bellSystem,      false],
+                ['Öffnungstaster',   CONFIG.intercom.openingButton,  false],
+                ['SIP-Integration',  CONFIG.intercom.sipIntegration, false],
+                ['App-Steuerung',    CONFIG.intercom.appControl,     false],
+                ['Kabellose Verb.',  CONFIG.intercom.wirelessIndoor, false],
+              ].map(([label, value, accent], i, arr) => (
+                <div key={i} style={{
+                  display:'flex', alignItems:'center',
+                  borderBottom: i < arr.length - 1 ? '1px solid #EFEFEF' : 'none',
+                  borderLeft: '4px solid transparent',
+                  background: i % 2 === 0 ? '#FFFFFF' : '#FAFAFA',
+                }}>
+                  <div style={{
+                    flex:'0 0 160px', padding:'9px 16px',
+                    fontSize:10, fontWeight:700, color:'#6C6C70',
+                    textTransform:'uppercase', letterSpacing:'0.08em', lineHeight:1.4,
+                  }}>{label}</div>
+                  <div style={{
+                    width:1, alignSelf:'stretch', background:'#EFEFEF', flexShrink:0,
+                  }} />
+                  <div style={{
+                    flex:1, padding:'9px 16px',
+                    fontSize:12, fontWeight:700,
+                    color: '#1C1C1E',
+                    lineHeight:1.4,
+                  }}>{value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display:'flex', justifyContent:'center', alignItems:'center', marginTop:16, paddingBottom:8 }}>
+            <img src="/img_pushbutton.png" style={{ width:'60%', height:'auto', objectFit:'contain', borderRadius:8 }} />
+          </div>
+          <Footer page={2} total={3} />
+        </div>
+      );
+    };
+
+    /* ================================================================
+       PAGE 3  ─  Pricing Table + Grand Total
+       ================================================================ */
+    const Page3 = () => {
+      const grouped = groupBy(LINE_ITEMS, 'cat');
+      const sectionMeta = {
+        mounting: 'Montagetyp',
+        intercom: 'Türstation Modul',
+      };
+
+      return (
+        <div className="page" style={{ paddingBottom:68 }}>
+          <AccentBar />
+          <Header configId={CONFIG.id} date={CONFIG.date} />
+          <Divider my={0} />
+
+          <div style={{ padding:'18px 48px 0', marginBottom:16 }}>
+            <div style={{ fontSize:12, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#005A42', marginBottom:5 }}>
+              Preisübersicht
+            </div>
+            <h2 style={{ fontSize:22, fontWeight:800, color:'#1C1C1E', margin:0 }}>Konfigurationskosten</h2>
+          </div>
+
+          {/* ── Pricing Table ── */}
+          <div style={{ padding:'0 48px' }}>
+            <table style={{ width:'100%', borderCollapse:'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom:'2px solid #005A42' }}>
+                  {[
+                    { label:'Komponente',   align:'left',   w:'auto', pl:0,  pr:0  },
+                    { label:'Stückpreis',   align:'right',  w:110,    pl:20, pr:20 },
+                    { label:'Anzahl',       align:'right',  w:70,     pl:20, pr:20 },
+                    { label:'Gesamtpreis',  align:'right',  w:120,    pl:20, pr:0  },
+                  ].map(h => (
+                    <th key={h.label} style={{
+                      paddingBottom:10, textAlign:h.align,
+                      paddingLeft:h.pl, paddingRight:h.pr,
+                      fontSize:12, fontWeight:700, color:'#005A42',
+                      letterSpacing:'0.08em', textTransform:'uppercase',
+                      width:h.w !== 'auto' ? h.w : undefined,
+                    }}>{h.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(sectionMeta).map(([cat, label]) =>
+                  grouped[cat] ? (
+                    <PriceSection key={cat} title={label} items={grouped[cat]} />
+                  ) : null
+                )}
+
+              </tbody>
+            </table>
+
+            {/* ── Grand Total Block ── */}
+            <div style={{ marginTop:8, borderTop:'2px solid #1C1C1E', paddingTop:12 }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
+                <span style={{ fontSize:15, fontWeight:700, color:'#1C1C1E' }}>Gesamtsumme:</span>
+                <span style={{ fontSize:15, fontWeight:700, color:'#1C1C1E', fontVariantNumeric:'tabular-nums' }}>{fmt(GRAND_TOTAL)} €</span>
+              </div>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginTop:4 }}>
+                <span style={{ fontSize:11, color:'#6C6C70' }}>inkl. 19% USt.</span>
+                <span style={{ fontSize:11, color:'#6C6C70', fontVariantNumeric:'tabular-nums' }}>{fmt(VAT)} €</span>
+              </div>
+            </div>
+
+            {/* ── Tracking Code ── */}
+            <div style={{
+              marginTop:16, padding:'14px 18px',
+              background:'transparent', borderRadius:8,
+              border:'1.5px solid #005A42',
+              display:'flex', alignItems:'center', justifyContent:'space-between', gap:16,
+            }}>
+              <div>
+                <div style={{ fontSize:12, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#005A42', marginBottom:6 }}>
+                  Jetzt bestellen
+                </div>
+                <div style={{ fontSize:12, color:'#3C3C3E', marginTop:2, lineHeight:1.85 }}>
+                  Scannen Sie den QR-Code, um direkt zu Ihrem persönlichen Konfigurator zu gelangen und diese Konfiguration zum angegebenen Preis zu bestellen.
+                  <div style={{ marginTop:4 }}>Alternativ können Sie auch diesen Link verwenden:</div>
+                  <div style={{ color:'#005A42', wordBreak:'break-all', marginTop:2 }}>{CONFIG.configUrl}</div>
+                </div>
+              </div>
+              <img src="/img_qr.png" width={64} height={64} style={{ display:'block', flexShrink:0, imageRendering:'pixelated' }} />
+            </div>
+
+            {/* ── Disclaimer ── */}
+            <div style={{
+              marginTop:10, padding:'12px 16px',
+              background:'white', borderRadius:6,
+              border:'1px solid #CCCCCC',
+              borderLeft:'4px solid #005A42',
+            }}>
+              <p style={{ margin:0, fontSize:12, color:'#3C3C3E', lineHeight:1.85 }}>
+                <strong style={{ color:'#1C1C1E' }}>Preishinweis:</strong> Alle Preise verstehen sich inklusive 19 % MwSt. Mit Ihrer Konfigurationsnummer können Sie die Konfiguration bis zu 90 Tage zum angegebenen Preis bestellen. Danach behalten wir uns Preisänderungen vor.
+              </p>
+            </div>
+
+          </div>
+
+          <Footer page={3} total={3} />
+        </div>
+      );
+    };
+
+    /* ================================================================
+       APP ROOT
+       ================================================================ */
+    const App = () => (
+      <div>
+        <Page1 />
+        <Page2 />
+        <Page3 />
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
