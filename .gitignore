@@ -11,3 +11,7 @@ code.docx
 unpacked_docx/
 
 .github/workflows/
+
+# local-only artefacts (never commit)
+node_modules/
+dist/
