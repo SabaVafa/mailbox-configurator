@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<style id="pf-ext-css">[data-pf-ext]{pointer-events:none !important;cursor:default !important;}</style>
 <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -798,5 +799,6 @@
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
+<script id="pf-ext-js">(function(){["click","auxclick","keydown"].forEach(function(ev){document.addEventListener(ev,function(e){var t=e.target;if(!t||!t.closest)return;var el=t.closest("[data-pf-ext],[data-href][role=link]");if(!el)return;if(ev!=="keydown"||e.key==="Enter"||e.key===" "){e.preventDefault();e.stopImmediatePropagation();}},true);});})();</script>
 </body>
 </html>
